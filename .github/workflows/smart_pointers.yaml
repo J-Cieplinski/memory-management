@@ -1,0 +1,72 @@
+name: smart_pointers
+
+on: [push, pull_request]
+
+jobs:
+  shared_ptr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir shared_ptr/build
+      run: mkdir shared_ptr/build
+    - name: Compile
+      working-directory: shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: shared_ptr/build
+      run: ctest -V
+
+  valgrind_shared_ptr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install valgrind
+      run: sudo apt-get update && sudo apt-get install valgrind
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir shared_ptr/build
+      run: mkdir shared_ptr/build
+    - name: Compile
+      working-directory: shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests with valgrind
+      working-directory: shared_ptr/build
+      run: valgrind --leak-check=full --show-leak-kinds=all ./shared_ptr-ut
+  
+  unique_ptr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir unique_ptr/build
+      run: mkdir unique_ptr/build
+    - name: Compile
+      working-directory: unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: unique_ptr/build
+      run: ctest -V
+
+  valgrind_unique_ptr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install valgrind
+      run: sudo apt-get update && sudo apt-get install valgrind
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir unique_ptr/build
+      run: mkdir unique_ptr/build
+    - name: Compile
+      working-directory: unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests with valgrind
+      working-directory: unique_ptr/build
+      run: valgrind --leak-check=full --show-leak-kinds=all ./unique_ptr-ut
